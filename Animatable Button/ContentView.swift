@@ -29,7 +29,7 @@ struct FingerprintAnimationView: View {
     @State private var isPressed = false
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             // Background
             if isPressed {
                 Color.purple
@@ -39,35 +39,26 @@ struct FingerprintAnimationView: View {
             }
 
             // Fingerprint Button
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    ZStack {
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 80, height: 80)
-                            .overlay(
-                                Image(systemName: "touchid")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .padding(20)
-                                    .foregroundColor(.purple)
-                            )
-                    }
-                    .scaleEffect(isPressed ? 1.2 : 1.0)
-                    .animation(.easeInOut(duration: 0.2), value: isPressed)
-                    .onLongPressGesture(minimumDuration: 0.1, maximumDistance: .infinity,
-                                        pressing: { pressing in
-                                            withAnimation {
-                                                isPressed = pressing
-                                            }
-                                        },
-                                        perform: { })
-                    Spacer()
-                }
-                Spacer()
-            }
+            Circle()
+                .fill(Color.white)
+                .frame(width: 80, height: 80)
+                .overlay(
+                    Image(systemName: "touchid")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(20)
+                        .foregroundColor(.purple)
+                )
+                .scaleEffect(isPressed ? 1.2 : 1.0)
+                .animation(.easeInOut(duration: 0.2), value: isPressed)
+                .onLongPressGesture(minimumDuration: 0.1, maximumDistance: .infinity,
+                                    pressing: { pressing in
+                                        withAnimation {
+                                            isPressed = pressing
+                                        }
+                                    },
+                                    perform: { })
+                .padding(.bottom, 48)
         }
     }
 }
