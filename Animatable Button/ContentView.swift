@@ -31,7 +31,6 @@ struct AnimatedFingerPrintButton: View {
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .bottom) {
-                // Expanding circular overlay
                 Circle()
                     .fill(Color.purple)
                     .frame(width: buttonDiameter, height: buttonDiameter)
@@ -41,7 +40,6 @@ struct AnimatedFingerPrintButton: View {
                     .animation(.easeOut(duration: 1), value: isPressed)
                     .padding(.bottom, 48)
 
-                // Fingerprint Button
                 Circle()
                     .fill(Color.white)
                     .frame(width: buttonDiameter, height: buttonDiameter)
