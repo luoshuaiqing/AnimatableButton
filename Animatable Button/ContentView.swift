@@ -12,7 +12,7 @@ struct ContentView: View {
         VStack {
             Spacer()
             
-            FingerprintAnimationView()
+            AnimatedFingerPrintButton()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
@@ -24,7 +24,7 @@ struct ContentView: View {
 }
 
 
-struct FingerprintAnimationView: View {
+struct AnimatedFingerPrintButton: View {
     @State private var isPressed = false
     private let buttonDiameter = 88.0
 
