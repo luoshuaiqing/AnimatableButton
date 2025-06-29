@@ -12,7 +12,8 @@ struct ContentView: View {
         VStack {
             Spacer()
             
-            AnimatedFingerPrintButton()
+            AnimatedFingerPrintButton(buttonDiameter: 88)
+                .padding(.bottom, 48)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
@@ -26,42 +27,36 @@ struct ContentView: View {
 
 struct AnimatedFingerPrintButton: View {
     @State private var isPressed = false
-    private let buttonDiameter = 88.0
+    let buttonDiameter: CGFloat
 
     var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .bottom) {
+        Circle()
+            .fill(Color.white)
+            .frame(width: buttonDiameter, height: buttonDiameter)
+            .overlay(
+                Image(systemName: "touchid")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(20)
+                    .foregroundColor(.purple)
+            )
+            .scaleEffect(isPressed ? 1.2 : 1.0)
+            .animation(.easeInOut(duration: 0.2), value: isPressed)
+            .onLongPressGesture(minimumDuration: 0.1, maximumDistance: .infinity,
+                                pressing: { pressing in
+                                    withAnimation {
+                                        isPressed = pressing
+                                    }
+                                },
+                                perform: { })
+            .overlay {
                 Circle()
                     .fill(Color.purple)
                     .frame(width: buttonDiameter, height: buttonDiameter)
                     .scaleEffect(isPressed ? 20 : 0.001, anchor: .bottom)
                     .offset(y: isPressed ? 100 : 0)
                     .opacity(isPressed ? 1 : 0)
-                    .animation(.easeOut(duration: 1), value: isPressed)
-                    .padding(.bottom, 48)
-
-                Circle()
-                    .fill(Color.white)
-                    .frame(width: buttonDiameter, height: buttonDiameter)
-                    .overlay(
-                        Image(systemName: "touchid")
-                            .resizable()
-                            .scaledToFit()
-                            .padding(20)
-                            .foregroundColor(.purple)
-                    )
-                    .scaleEffect(isPressed ? 1.2 : 1.0)
-                    .animation(.easeInOut(duration: 0.2), value: isPressed)
-                    .onLongPressGesture(minimumDuration: 0.1, maximumDistance: .infinity,
-                                        pressing: { pressing in
-                                            withAnimation {
-                                                isPressed = pressing
-                                            }
-                                        },
-                                        perform: { })
-                    .padding(.bottom, 48)
+                    .animation(.easeOut(duration: 0.6), value: isPressed)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        }
     }
 }
