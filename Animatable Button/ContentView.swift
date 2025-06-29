@@ -27,12 +27,11 @@ struct ContentView: View {
 
 struct FingerprintAnimationView: View {
     @State private var isPressed = false
-    @GestureState private var isDetectingLongPress = false
 
     var body: some View {
         ZStack {
             // Background
-            if isPressed || isDetectingLongPress {
+            if isPressed {
                 Color.purple
                     .ignoresSafeArea()
                     .transition(.scale(scale: 0.1, anchor: .center).combined(with: .opacity))
@@ -56,26 +55,15 @@ struct FingerprintAnimationView: View {
                                     .foregroundColor(.purple)
                             )
                     }
-                    .scaleEffect(isDetectingLongPress ? 1.2 : 1.0)
-                    .gesture(
-                        LongPressGesture(minimumDuration: 0.1)
-                            .updating($isDetectingLongPress) { currentState, gestureState, _ in
-                                gestureState = currentState
-                            }
-                            .onEnded { _ in
-                                withAnimation {
-                                    isPressed = true
-                                }
-                            }
-                    )
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onEnded { _ in
-                                withAnimation {
-                                    isPressed = false
-                                }
-                            }
-                    )
+                    .scaleEffect(isPressed ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 0.2), value: isPressed)
+                    .onLongPressGesture(minimumDuration: 0.1, maximumDistance: .infinity,
+                                        pressing: { pressing in
+                                            withAnimation {
+                                                isPressed = pressing
+                                            }
+                                        },
+                                        perform: { })
                     Spacer()
                 }
                 Spacer()
