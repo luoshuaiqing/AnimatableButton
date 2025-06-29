@@ -50,7 +50,6 @@ struct AnimatedFingerPrintButton: View {
             .overlay {
                 Circle()
                     .fill(Color.purple)
-                    .frame(width: buttonDiameter, height: buttonDiameter)
                     .scaleEffect(isPressed ? 20 : 0.001, anchor: .bottom)
                     .offset(y: isPressed ? 100 : 0)
                     .opacity(isPressed ? 1 : 0)
