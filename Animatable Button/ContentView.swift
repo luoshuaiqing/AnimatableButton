@@ -32,17 +32,22 @@ struct FingerprintAnimationView: View {
         GeometryReader { geo in
             // Compute a scale large enough for the circle to cover the whole screen
             let buttonDiameter: CGFloat = 80
-            let fullScale = sqrt(geo.size.width * geo.size.width +
-                                 geo.size.height * geo.size.height) / buttonDiameter
+            // Y–position of the button’s bottom edge
+            let buttonBottomY = geo.size.height - 48
+            // Farthest corner distance from the button’s bottom‑center
+            let maxDistance = sqrt(pow(geo.size.width / 2, 2) +
+                                   pow(buttonBottomY, 2))
+            // Scale so the circle’s radius grows beyond that distance
+            let fullScale = (maxDistance * 2) / buttonDiameter
 
             ZStack(alignment: .bottom) {
                 // Expanding circular overlay
                 Circle()
                     .fill(Color.purple)
                     .frame(width: buttonDiameter, height: buttonDiameter)
-                    .scaleEffect(isPressed ? fullScale : 0.001)
+                    .scaleEffect(isPressed ? fullScale : 0.001, anchor: .bottom)
                     .opacity(isPressed ? 1 : 0)
-                    .animation(.easeOut(duration: 0.4), value: isPressed)
+                    .animation(.easeOut(duration: 1), value: isPressed)
                     .padding(.bottom, 48)
 
                 // Fingerprint Button
