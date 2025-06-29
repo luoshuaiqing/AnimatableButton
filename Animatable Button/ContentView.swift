@@ -44,9 +44,7 @@ struct AnimatedFingerPrintButton: View {
             .animation(.easeInOut(duration: 0.2), value: isPressed)
             .onLongPressGesture(minimumDuration: 0.1, maximumDistance: .infinity,
                                 pressing: { pressing in
-                                    withAnimation {
-                                        isPressed = pressing
-                                    }
+                                    isPressed = pressing
                                 },
                                 perform: { })
             .overlay {
