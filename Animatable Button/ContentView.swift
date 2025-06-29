@@ -12,26 +12,7 @@ struct ContentView: View {
         VStack {
             Spacer()
             
-            Button {
-                
-            } label: {
-                ZStack {
-                    Circle()
-                        .fill(
-                            RadialGradient(gradient: Gradient(colors: [Color.purple.opacity(0.7), Color.black]), center: .center, startRadius: 10, endRadius: 90)
-                        )
-                        .frame(width: 120, height: 120)
-                        .shadow(color: Color.purple.opacity(0.5), radius: 30, x: 0, y: 0)
-                    Circle()
-                        .stroke(Color.white.opacity(0.3), lineWidth: 4)
-                        .frame(width: 100, height: 100)
-                    Image(systemName: "touchid")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 48, height: 48)
-                        .foregroundColor(.white)
-                }
-            }
+            FingerprintAnimationView()
             .padding(.bottom, 48)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,4 +22,64 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+
+struct FingerprintAnimationView: View {
+    @State private var isPressed = false
+    @GestureState private var isDetectingLongPress = false
+
+    var body: some View {
+        ZStack {
+            // Background
+            if isPressed || isDetectingLongPress {
+                Color.purple
+                    .ignoresSafeArea()
+                    .transition(.scale(scale: 0.1, anchor: .center).combined(with: .opacity))
+                    .animation(.easeOut(duration: 0.4), value: isPressed)
+            }
+
+            // Fingerprint Button
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 80, height: 80)
+                            .overlay(
+                                Image(systemName: "touchid")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(20)
+                                    .foregroundColor(.purple)
+                            )
+                    }
+                    .scaleEffect(isDetectingLongPress ? 1.2 : 1.0)
+                    .gesture(
+                        LongPressGesture(minimumDuration: 0.1)
+                            .updating($isDetectingLongPress) { currentState, gestureState, _ in
+                                gestureState = currentState
+                            }
+                            .onEnded { _ in
+                                withAnimation {
+                                    isPressed = true
+                                }
+                            }
+                    )
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onEnded { _ in
+                                withAnimation {
+                                    isPressed = false
+                                }
+                            }
+                    )
+                    Spacer()
+                }
+                Spacer()
+            }
+        }
+    }
 }
